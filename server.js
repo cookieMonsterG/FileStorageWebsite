@@ -1,11 +1,12 @@
 const express = require("express");
 const app = express();
 const multer = require("multer");
-const path = require("path");
+
 
 //used to specify file destination on local system after uploading
 let storage = multer.diskStorage({
     destination: "uploads",
+   
     filename: function (req, file, cb) {
         cb(null, file.originalname);
     }
@@ -17,12 +18,13 @@ let upload = multer({
 }).single("myFile");
 
 app.get("/", function (req, res) {
-    res.sendFile(__dirname + "/index.html");
+    res.sendFile(__dirname + "/root.html");
 })
 
 //go to POST page and start uploading file
 app.post("/uploadProfilePicture", function (req, res) {
-
+    
+    
     upload(req, res, function (err) {
 
         if (err) {
@@ -30,7 +32,7 @@ app.post("/uploadProfilePicture", function (req, res) {
         }
         else {
             // SUCCESS, image successfully uploaded 
-            res.send("Success, Image uploaded!")
+            res.sendFile(__dirname + "/upload.html")
         }
     })
 })
