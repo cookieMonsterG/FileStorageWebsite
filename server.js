@@ -2,8 +2,13 @@ const express = require("express");
 const app = express();
 const path = require("path")
 const multer = require("multer");
+const body = require("body-parser");
+const randtoken = require("rand-token");
 
-let number = 0; //used for random url
+app.use(express.static("public"));
+app.use(body.urlencoded({ extended: true }));
+
+let token = "";
 let fileMap = new Map(); //hold all files and corresponding key
 
 //used to specify file destination on local system after uploading
@@ -11,10 +16,11 @@ let storage = multer.diskStorage({
     destination: "uploads",
 
     filename: function (req, file, cb) {
-        number = Math.floor((Math.random() * 1000000) + 1);
-        fileMap.set(number.toString(), file);//store file in the map
-        let extension = path.extname(file.originalname).toLowerCase();
-        cb(null, number.toString() + extension);
+       
+        // Generate a 16 character alpha-numeric token
+        token = randtoken.generate(16);
+        fileMap.set(token.toString(), file);//store file in the map
+        cb(null, file.originalname);
 
     }
 })
@@ -25,7 +31,7 @@ let upload = multer({
 }).single("myFile");
 
 app.get("/", function (req, res) {
-    res.sendFile(__dirname + "/root.html");
+    res.sendFile(__dirname + "/main.html");
 })
 
 app.post("/uploadFileAndGetFileUrl", (req, res) => {
@@ -38,7 +44,7 @@ app.post("/uploadFileAndGetFileUrl", (req, res) => {
         }
         else {
             // SUCCESS, file successfully uploaded 
-            res.send("http://127.0.0.1:3000/DownloadFileWithRandomUrl/" + number.toString());
+            res.send("http://127.0.0.1:3000/DownloadFileWithRandomUrl/" + token);
         }
     })
     //generate a random url
@@ -50,9 +56,10 @@ app.get('/downloadFileWithRandomUrl/:token', (req, res) => {
     // Retrieve the tag from our URL path
     let token = req.params.token;
 
+    //use fs module
     let currentFile = fileMap.get(token);
-    let extension = path.extname(currentFile.originalname).toLowerCase();
-    let fileName = token + extension;
+    //let extension = path.extname(currentFile.originalname).toLowerCase();
+    let fileName = currentFile.originalname;
     // let fileDir = `${__dirname}\\uploads\\`;
     // console.log(fileDir);
     let dir = path.join(__dirname, 'uploads/' + fileName);
@@ -62,9 +69,21 @@ app.get('/downloadFileWithRandomUrl/:token', (req, res) => {
     });
     console.log("downloaded");
     //res.sendFile();
+})
 
+//sign in page
+app.get('/signin', function(req, res){
+    res.sendFile(__dirname + "/signin.html");
+    console.log("get signin")
+})
 
+//after successfully signing in, go to main page
+app.post('/signin', function(req, res){
+    let email = req.body.email;
+    let password = req.body.password;
 
+    console.log(email, password);
+    res.redirect('/');
 })
 
 // Take any port number of your choice which 
