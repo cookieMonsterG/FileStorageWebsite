@@ -4,22 +4,27 @@ const path = require("path")
 const multer = require("multer");
 const body = require("body-parser");
 const randtoken = require("rand-token");
+const fs = require("fs");
 
 app.use(express.static("public"));
 app.use(body.urlencoded({ extended: true }));
 
 let token = "";
-let fileMap = new Map(); //hold all files and corresponding key
 
 //used to specify file destination on local system after uploading
 let storage = multer.diskStorage({
-    destination: "uploads",
-
-    filename: function (req, file, cb) {
-       
+    destination: function (req, file, cb) {
         // Generate a 16 character alpha-numeric token
         token = randtoken.generate(16);
-        fileMap.set(token.toString(), file);//store file in the map
+        console.log(token);
+        // if (!fs.existsSync('./uploads/' + token)){
+        //     fs.mkdirSync('/uploads/' + token);
+        // }
+        cb(null, '/uploads')
+    },
+
+    filename: function (req, file, cb) {
+
         cb(null, file.originalname);
 
     }
@@ -55,13 +60,14 @@ app.get('/downloadFileWithRandomUrl/:token', (req, res) => {
 
     // Retrieve the tag from our URL path
     let token = req.params.token;
-
     //use fs module
-    let currentFile = fileMap.get(token);
-    //let extension = path.extname(currentFile.originalname).toLowerCase();
-    let fileName = currentFile.originalname;
-    // let fileDir = `${__dirname}\\uploads\\`;
-    // console.log(fileDir);
+    const folder = './uploads/' + token;
+    let fileName = '';
+    fs.readdir(folder, (err, files) => {
+        //fileName is the first file(only one) under the folder
+        fileName = files[0];
+    });
+
     let dir = path.join(__dirname, 'uploads/' + fileName);
     console.log(dir);
     res.download(dir, fileName, function (error) {
@@ -72,13 +78,13 @@ app.get('/downloadFileWithRandomUrl/:token', (req, res) => {
 })
 
 //sign in page
-app.get('/signin', function(req, res){
+app.get('/signin', function (req, res) {
     res.sendFile(__dirname + "/signin.html");
     console.log("get signin")
 })
 
 //after successfully signing in, go to main page
-app.post('/signin', function(req, res){
+app.post('/signin', function (req, res) {
     let email = req.body.email;
     let password = req.body.password;
 
