@@ -1,3 +1,4 @@
+'use strict';//strict mode
 const express = require("express");
 const app = express();
 const path = require("path")
@@ -17,10 +18,10 @@ let storage = multer.diskStorage({
         // Generate a 16 character alpha-numeric token
         token = randtoken.generate(16);
         console.log(token);
-        // if (!fs.existsSync('./uploads/' + token)){
-        //     fs.mkdirSync('/uploads/' + token);
-        // }
-        cb(null, '/uploads')
+        if (!fs.existsSync(__dirname + '/uploads/' + token)) {
+            fs.mkdirSync(__dirname + '/uploads/' + token);
+        }
+        cb(null, __dirname + '/uploads/' + token);
     },
 
     filename: function (req, file, cb) {
@@ -32,11 +33,11 @@ let storage = multer.diskStorage({
 //upload can process one file each time
 let upload = multer({
     storage: storage //this specify file name and destination after uploading
-    // myFile is the name of file attribute 
+    // myFile is the name of file attribute  
 }).single("myFile");
 
-app.get("/", function (req, res) {
-    res.sendFile(__dirname + "/main.html");
+app.get("/upload", function (req, res) {
+    res.sendFile(__dirname + "/main.html"); //change html to static content, like sytles.css
 })
 
 app.post("/uploadFileAndGetFileUrl", (req, res) => {
@@ -61,35 +62,44 @@ app.get('/downloadFileWithRandomUrl/:token', (req, res) => {
     // Retrieve the tag from our URL path
     let token = req.params.token;
     //use fs module
-    const folder = './uploads/' + token;
-    let fileName = '';
+    const folder = __dirname + '/uploads/' + token;
     fs.readdir(folder, (err, files) => {
         //fileName is the first file(only one) under the folder
-        fileName = files[0];
-    });
+        let fileName = files[0];
+      
+        let dir = path.join(__dirname, 'uploads/' + token + '/' + fileName);
+        console.log(dir);
+        // let response = document.getElementById("response");
+        // if (res.statusCode === 200){
+        //    response = "File url: " + dir;
+        // }else{
+        //     response = "Error! Please try again."
+        // }
+        res.download(dir, fileName, function (error) {
+            console.log("Error: ", error);
 
-    let dir = path.join(__dirname, 'uploads/' + fileName);
-    console.log(dir);
-    res.download(dir, fileName, function (error) {
-        console.log("Error: ", error);
+        });
     });
+    
+    
+
     console.log("downloaded");
     //res.sendFile();
 })
 
 //sign in page
-app.get('/signin', function (req, res) {
-    res.sendFile(__dirname + "/signin.html");
-    console.log("get signin")
-})
+// app.get('/', function (req, res) {
+//     res.sendFile(__dirname + "/signin.html");
+//     console.log("get signin")
+// })
 
 //after successfully signing in, go to main page
-app.post('/signin', function (req, res) {
+app.post('/', function (req, res) {
     let email = req.body.email;
     let password = req.body.password;
 
     console.log(email, password);
-    res.redirect('/');
+    res.redirect('/upload');
 })
 
 // Take any port number of your choice which 

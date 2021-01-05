@@ -1,0 +1,80 @@
+Data has been updated for VT 07/29/2020
+Low quality data rejected for OK
+Data has been updated for SC 07/20/2020
+Low quality data rejected for OK
+Low quality data rejected for OK
+Low quality data rejected for OK
+Low quality data rejected for OK
+Data has been updated for TN 07/13/2020
+Data has been updated for OK 07/12/2020
+Data has been updated for the missing data in OK
+Discard invalid record
+Low quality data rejected for OK
+Low quality data rejected for VT
+Data has been updated for AK 07/17/2020
+Low quality data rejected for SC
+Low quality data rejected for MO
+Low quality data rejected for MO
+Data has been updated for TN 07/19/2020
+Data has been updated for OK 07/17/2020
+Low quality data rejected for TN
+Data has been updated for OK 07/13/2020
+Data has been updated for TN 07/15/2020
+Low quality data rejected for TN
+Low quality data rejected for TN
+Low quality data rejected for OK
+Low quality data rejected for TN
+Data has been updated for OK 07/15/2020
+Low quality data rejected for TN
+Data has been updated for OK 07/17/2020
+Finished loading Sample.csv file
+86 records have been loaded
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+VT      07/29/2020   171         239         722            265                      484                      155         B                  417     
+1 records have been printed for state VT on date 07/29/2020
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+0 records have been printed for state VA on date 07/29/2020
+The state new pii does not exist
+The date 07/35/2020 is not valid
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+SC      07/29/2020   798         984         633            788                      683                      780         C                  127     
+1 records have been printed for state SC on date 07/29/2020
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+0 records have been printed with better or equal than quality grade A+ for state VT
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+VA      07/12/2020   864         721         208            169                      855                      182         A+                 338     
+1 records have been printed with better or equal than quality grade A+ for state VA
+The state new pii does not exist
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+0 records have been printed with better or equal than quality grade A+ for state SC
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+VT      07/17/2020   590         149         985            7                        477                      410         A                  335     
+VT      07/18/2020   988         183         923            247                      639                      733         B+                 4       
+VT      07/29/2020   171         239         722            265                      484                      155         B                  417     
+VT      07/30/2020   984         84          294            738                      293                      965         B                  416     
+4 records have been printed with better or equal than quality grade C+ for state VT
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+VA      07/12/2020   864         721         208            169                      855                      182         A+                 338     
+VA      07/18/2020   511         290         385            210                      516                      149         A                  410     
+VA      07/20/2020   779         771         873            672                      941                      671         C+                 373     
+3 records have been printed with better or equal than quality grade C+ for state VA
+The state new pii does not exist
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+SC      07/01/2020   108         829         936            958                      258                      508         A                  477     
+SC      07/06/2020   282         590         492            307                      229                      100         A                  382     
+SC      07/08/2020   301         635         861            159                      625                      869         B+                 88      
+SC      07/20/2020   652         304         68             256                      194                      499         A                  223     
+4 records have been printed with better or equal than quality grade C+ for state SC
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+0 records have been printed with better or equal than quality grade A+ on date 07/29/2020
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+0 records have been printed with better or equal than quality grade A+ on date 07/29/2021
+The date 07/34/2021 is not valid
+The date 074/29/2021 is not valid
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+VT      07/29/2020   171         239         722            265                      484                      155         B                  417     
+1 records have been printed with better or equal than quality grade C+ on date 07/29/2020
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+0 records have been printed with better or equal than quality grade C+ on date 07/29/2021
+The date 07/34/2021 is not valid
+The date 074/29/2021 is not valid
