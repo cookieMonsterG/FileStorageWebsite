@@ -14,36 +14,31 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
-    <link href="/css/cover.css" rel="stylesheet">
+    <link href="/css/home.css" rel="stylesheet">
+
 </head>
 
 <body class="d-flex h-100 text-center text-white bg-dark">
 
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <div class=" w-100 h-100 p-3 mx-auto flex-column">
         <header class="mb-auto">
             <div>
                 <h3 class="float-md-start mb-0">Your File Storage</h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link active" aria-current="page" href="/upload/index.html">Upload</a>
-                    <a class="nav-link" href="/home/index.html">Home</a>
-                     <!--<a class="nav-link" href="#">Features</a>-->
+                    <a class="nav-link " aria-current="page" href="/upload">Upload</a>
+                    <a class="nav-link active" href="/home">Home</a>
+                    <!--<a class="nav-link" href="#">Features</a>-->
                 </nav>
             </div>
         </header>
 
-        <main class="px-3">
-            <h1>Upload your file</h1><br>
-            <form action="/uploadFileAndGetFileUrl" method="POST" enctype="multipart/form-data">
-                <input type="file" , name="myFile" required> 
-                <button  type="submit" class="btn btn-primary">submit</button>
-            </form>
-        </main>
-
-        <p id="response"></p>
-        <div class="mt-auto text-white-50"></div>
-    </div>
-
-
+        <ul>
+            <% files.forEach(function(record){%>
+                <li>
+                    <a href="http://127.0.0.1:3000/DownloadFileWithRandomUrl/<%= record.token %> " download><%= record.fileName %></a>
+                </li>
+                <% }) %>
+        </ul>
 
 </body>
 

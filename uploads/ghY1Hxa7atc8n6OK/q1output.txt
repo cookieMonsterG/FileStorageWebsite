@@ -1,0 +1,43 @@
+Low quality data rejected for OK
+Data has been updated for AK 07/17/2020
+Low quality data rejected for SC
+Data has been updated for OK 07/13/2020
+Data has been updated for TN 07/15/2020
+Low quality data rejected for TN
+Low quality data rejected for OK
+Data has been updated for OK 07/15/2020
+Data has been updated for OK 07/17/2020
+Finished loading Sample_Input2.csv file
+52 records have been loaded
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+NJ      07/17/2020   241         500         645            947                      748                      472         A                  928     
+NJ      07/18/2020   241         500         645            947                      748                      472         A                  928     
+NJ      07/19/2020   241         500         645            947                      748                      472         A                  928     
+NJ      07/20/2020   241         500         645            947                      748                      472         A                  928     
+NJ      07/21/2020   241         500         645            947                      748                      472         A                  928     
+NJ      07/22/2020   241         500         645            947                      748                      472         A                  928     
+NJ      07/23/2020   241         500         645            947                      748                      472         A                  928     
+7 records have been printed with better or equal than quality grade B for state NJ
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+0 records have been printed with better or equal than quality grade B ​for state NJ from 07/29/2020 to 07/30/2020
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+AK      07/17/2020   8           431         804            761                      338                      81          B+                 457     
+NJ      07/17/2020   241         500         645            947                      748                      472         A                  928     
+OK      07/17/2020   241         500         645            947                      748                      472         A                  928     
+3 records have been printed with better or equal than quality grade B on date 07/17/2020
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+AK      07/17/2020   8           431         804            761                      338                      81          B+                 457     
+NJ      07/17/2020   241         500         645            947                      748                      472         A                  928     
+OK      07/17/2020   241         500         645            947                      748                      472         A                  928     
+3 records have been printed with better or equal than quality grade B from 07/16/2020 to 07/17/2020
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+NJ      07/21/2020   241         500         645            947                      748                      472         A                  928     
+NJ      07/22/2020   241         500         645            947                      748                      472         A                  928     
+2 records have been printed with better or equal than quality grade B from 07/21/2020 to 07/22/2020
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+NJ      07/17/2020   241         500         645            947                      748                      472         A                  928     
+1 records have been printed with better or equal than quality grade B for state NJ on date 07/17/2020
+state   date         positive    negative    hospitalized   onVentilatorCurrently    onVentilatorCumulative   recovered   dataQualityGrade   death   
+NJ      07/21/2020   241         500         645            947                      748                      472         A                  928     
+NJ      07/22/2020   241         500         645            947                      748                      472         A                  928     
+2 records have been printed with better or equal than quality grade B ​for state NJ from 07/21/2020 to 07/22/2020

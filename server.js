@@ -7,11 +7,14 @@ const body = require("body-parser");
 const randtoken = require("rand-token");
 const fs = require("fs");
 const mongoose = require('mongoose');
+const { exec } = require("child_process");
 
-
+app.set('view engine', 'ejs');
 app.use(express.static(__dirname + "/public"));
 // app.use(express.static(__dirname + "/HTML"));
 app.use(body.urlencoded({ extended: true }));
+
+//set up database ---------------------------------------------------------------------------------------------
 //connect to database "tokenDB"
 mongoose.connect('mongodb://localhost:27017/userDB', { useNewUrlParser: true, useUnifiedTopology: true });
 const userSchema = new mongoose.Schema({
@@ -21,8 +24,20 @@ const userSchema = new mongoose.Schema({
 })
 //create a new collection "User", all records contains username and password will be saved in the db
 const User = mongoose.model('USER', userSchema);
-let token = "";
 
+//create second collection to store files' location and its corresponding email account
+const fileSchema = new mongoose.Schema({
+    email: String,
+    fileName: String,
+    fileLocation: String,
+    token: String
+})
+const fileCollection = mongoose.model('FILECOLLECTION', fileSchema);
+//set up database ---------------------------------------------------------------------------------------------
+
+
+let token = "";
+let currentEmail = ""; // record the current user 
 //used to specify file destination on local system after uploading
 let storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -48,9 +63,25 @@ let upload = multer({
     // myFile is the name of file attribute  
 }).single("myFile");
 
-// app.get("/upload", function (req, res) {
-//     res.sendFile(__dirname + "/public/upload/main.html"); //change html to static content, like sytles.css
-// })
+app.get("/upload", function (req, res) {
+
+    res.render("upload");
+})
+
+app.get("/home", function (req, res) {
+    
+    fileCollection.find({ email: currentEmail }, function (err, files) {
+        if (err) {
+            console.log(err);
+        } else {
+      
+            res.render("home", {files: files});
+        }
+
+    })
+   
+    
+})
 
 app.post("/uploadFileAndGetFileUrl", (req, res) => {
 
@@ -61,8 +92,20 @@ app.post("/uploadFileAndGetFileUrl", (req, res) => {
             res.send(err)
         }
         else {
+            console.log(req.file.filename);
+
+            fileCollection.insertMany({ email: currentEmail, fileName: req.file.filename,
+                fileLocation: req.file.destination, token: token },
+                function (err, record) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        console.log(record);
+                    }
+                })
             // SUCCESS, file successfully uploaded 
-            res.send("http://127.0.0.1:3000/DownloadFileWithRandomUrl/" + token);
+            res.render("upload");
         }
     })
     //generate a random url
@@ -95,16 +138,15 @@ app.get('/downloadFileWithRandomUrl/:token', (req, res) => {
 })
 
 //sign in page
-// app.get('/', function (req, res) {
-//     res.sendFile(__dirname + "/signin.html");
-//     console.log("get signin")
-// })
+app.get('/', function (req, res) {
+    res.render("signin");
+})
 
 //after successfully signing in, go to main page
 app.post('/', function (req, res) {
     let email = req.body.email;
     let password = req.body.password;
-   
+
     User.findOne({ email: email }, function (err, user) {
         if (err) {
             console.log("error");
@@ -116,6 +158,7 @@ app.post('/', function (req, res) {
 
             } else {
                 if (user.password === password) {
+                    currentEmail = email; // update current email
                     let userToken = randtoken.generate(20);
                     console.log("success");
                     User.updateOne({ email: email }, { userToken: userToken }, function (err) {
@@ -123,6 +166,7 @@ app.post('/', function (req, res) {
                             console.log(err);
                         }
                     })
+                    console.log(currentEmail);
                     res.redirect('/upload');
                 }
                 else {
@@ -136,41 +180,41 @@ app.post('/', function (req, res) {
         }
 
     })
-   
+
 
 })
 
-// app.get("/signup", function(req, res){
-//     res.sendFile(__dirname + "/signup.html");
-// })
+app.get("/signup", function (req, res) {
+    res.render("signup");
+})
 
-app.post("/signup", function(req, res){
+app.post("/signup", function (req, res) {
     let email = req.body.email;
     let password = req.body.password;
-    User.findOne({email:email}, function(error, record){
-        if (error){
+    User.findOne({ email: email }, function (error, record) {
+        if (error) {
             console.log(error);
         }
-        else{
+        else {
             //if the record doesn't exist, then add it to the database
-            if (record === null){
-                User.insertMany([{email:email, password:password}], function(error, record){
-                    if (error){
+            if (record === null) {
+                User.insertMany([{ email: email, password: password }], function (error, record) {
+                    if (error) {
                         console.log(error);
                     }
-                    else{
+                    else {
                         console.log(record);
                     }
                 })
                 res.redirect("/");
             }
-            else{
+            else {
                 console.log("Email exists. Please try again");
                 res.redirect("/signup");
             }
         }
     })
-   
+
 })
 // Take any port number of your choice which 
 // is not taken by any other process 
