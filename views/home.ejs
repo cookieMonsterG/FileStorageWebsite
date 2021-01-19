@@ -15,12 +15,12 @@
 
     <!-- Custom styles for this template -->
     <link href="/css/home.css" rel="stylesheet">
-
+    
 </head>
 
 <body class="d-flex h-100 text-center text-white bg-dark">
 
-    <div class=" w-100 h-100 p-3 mx-auto flex-column">
+    <div class="p-3 mx-auto">
         <header class="mb-auto">
             <div>
                 <h3 class="float-md-start mb-0">Your File Storage</h3>
@@ -31,15 +31,18 @@
                 </nav>
             </div>
         </header>
-
-        <ul>
-            <% files.forEach(function(record){%>
-                <li>
-                    <a href="http://127.0.0.1:3000/DownloadFileWithRandomUrl/<%= record.token %> " download><%= record.fileName %></a>
-                </li>
-                <% }) %>
-        </ul>
-
+        <div class="list"> 
+            <ul>
+                <% files.forEach(function(record){%>
+                    <li>
+                        <a class="file" href="http://127.0.0.1:3000/DownloadFileWithRandomUrl/<%= record.token %> " download>
+                            <%= record.fileName %>
+                        </a>
+                        <a class="delete" href="http://127.0.0.1:3000/delete/<%= record.token %>">delete</a>
+                    </li>
+                    <% }) %>
+            </ul>
+        </div>
 </body>
 
 </html>
