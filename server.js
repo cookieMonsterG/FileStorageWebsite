@@ -37,15 +37,11 @@ const fileCollection = mongoose.model('FILECOLLECTION', fileSchema);
 //set up database ---------------------------------------------------------------------------------------------
 
 
-let token = "";
-let currentEmail = ""; // record the current user 
-let currentUserToken = ""; // used for authentication
-
 //used to specify file destination on local system after uploading
 let storage = multer.diskStorage({
     destination: function (req, file, cb) {
         // Generate a 16 character alpha-numeric token
-        token = randtoken.generate(16);
+        let token = randtoken.generate(16);
         console.log(token);
 
         if (!fs.existsSync(__dirname + '/uploads/' + token)) {
@@ -63,8 +59,8 @@ let storage = multer.diskStorage({
 })
 
 const fileFilter = (req, file, cb) => {
-
-    let found = fileCollection.findOne({ filename: file.filename, email: currentEmail }).exec();
+    console.log("req: " + req)
+    let found = fileCollection.findOne({ filename: file.filename, email: req.body.email }).exec();
     found.then((record) => {
         if (!record) {
             cb(null, true);
@@ -84,18 +80,18 @@ let upload = multer({
 });
 
 app.get("/upload", function (req, res) {
-
+    
     res.render("upload");
 })
 
-app.get("/home", function (req, res) {
-
+app.get("/home/:username", function (req, res) {
+    let currentEmail = req.params.username;
     fileCollection.find({ email: currentEmail }, function (err, files) {
         if (err) {
             console.log(err);
         } else {
 
-            res.render("home", { files: files });
+            res.render("home", { files: files , email: currentEmail});
         }
 
     })
@@ -103,21 +99,18 @@ app.get("/home", function (req, res) {
 
 })
 
-app.post("/uploadFileAndGetFileUrl", asyncHandler(async (req, res) => {
+app.post("/uploadFileAndGetFileUrl/:userToken", asyncHandler(async (req, res) => {
+
+    let userProvidedToken = req.params.userToken;
 
     //upload the file
     let uploadFile = upload.single("myFile");
 
-    //check if the user log in
-    if (currentEmail === "") {
-        res.send("Please log in first");
-    }
-
     let authenticate = false;
     //authenticate the userToken before uploading
-    const user = await User.findOne({ email: currentEmail });
+    const user = await User.findOne({ userToken: userProvidedToken });
     async function authentication() {
-        if (user.userToken === currentUserToken) {
+        if (user.userToken === userProvidedToken) {
             authenticate = true;
         }
     }
@@ -125,21 +118,24 @@ app.post("/uploadFileAndGetFileUrl", asyncHandler(async (req, res) => {
     //if authenticated, start uploading the file
     async function second() {
         if (authenticate) {
+
             uploadFile(req, res, function (err) {
 
                 console.log(req.file);
                 if (err) {
                     console.log("error");
-                    res.send(err)
+                    res.send(err);
                 }
                 else {
                     if (typeof req.file === 'undefined') {
-                        console.log("duplicate files");
+                        res.status(403).send("duplicate files");
                         //avoid duplicate filename error
                     }
                     else {
+                        //extracte the token
+                        let token = req.file.destination.split('/')[2];
                         fileCollection.insertMany({
-                            email: currentEmail, fileName: req.file.filename,
+                            email: user.email, fileName: req.file.filename,
                             fileLocation: req.file.destination, token: token
                         },
                             function (err, record) {
@@ -151,6 +147,7 @@ app.post("/uploadFileAndGetFileUrl", asyncHandler(async (req, res) => {
                                 }
                             })
                         // SUCCESS, file successfully uploaded 
+                        res.status(200).send("uploaded");
                     }
 
 
@@ -158,7 +155,7 @@ app.post("/uploadFileAndGetFileUrl", asyncHandler(async (req, res) => {
             })
         }
         else {
-            console.log("userTokens don't match");
+            res.status(403).send("Wrong userToken");
         }
 
 
@@ -168,16 +165,18 @@ app.post("/uploadFileAndGetFileUrl", asyncHandler(async (req, res) => {
     await second();
 
 
-    res.render("upload");
+    
 }))
 
-app.get('/downloadFileWithRandomUrl/:token', asyncHandler(async (req, res) => {
+app.get('/downloadFileWithRandomUrl/:email/:token/:userToken', asyncHandler(async (req, res) => {
 
     let authenticate = false;
+    let userToken = req.params.userToken;
+    let currentEmail = req.params.email;
     //authenticate the userToken before uploading
     const user = await User.findOne({ email: currentEmail });
     async function authentication() {
-        if (user.userToken === currentUserToken) {
+        if (user.userToken === userToken) {
             authenticate = true;
         }
     }
@@ -225,32 +224,21 @@ app.post('/login', function (req, res) {
         }
         else {
             if (user === null) {
-                console.log("email doesn't exsit!");
-                res.render('signin', { user: user });
-
+                res.status(403).send("email doesn't exsit!");
             } else {
                 if (user.password === password) {
-                    currentEmail = email; // update current email
+                    //currentEmail = email; // update current email
                     let userToken = randtoken.generate(20);
                     console.log("success");
 
-                    User.updateOne({ email: email }, { userToken: userToken }, function (err) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        else {
-                            currentUserToken = userToken;
-                            console.log("userToken: " + currentUserToken);
-                        }
-                    })
+                    User.updateOne({ email: email }, { userToken: userToken }).exec()
+                        .then(function () {                            
+                            res.status(200).send({email: email, userToken:userToken});
+                        })
 
-                    console.log(currentEmail);
-                    res.redirect('/upload');
                 }
                 else {
-                    console.log("Wrong password");
-                    res.redirect('/');
-
+                    res.status(403).send("Wrong password");
                 }
             }
 
@@ -298,12 +286,14 @@ app.post("/signup", function (req, res) {
 /**
  * delete a specified file
  */
-app.get("/delete/:token", asyncHandler(async function (req, res) {
+app.get("/delete/:email/:token/:userToken", asyncHandler(async function (req, res) {
     let authenticate = false;
+    let userToken = req.params.userToken;
+    let currentEmail = req.params.email;
     //authenticate the userToken before uploading
     const user = await User.findOne({ email: currentEmail });
     async function authentication() {
-        if (user.userToken === currentUserToken) {
+        if (user.userToken === userToken) {
             authenticate = true;
         }
     }
@@ -313,7 +303,7 @@ app.get("/delete/:token", asyncHandler(async function (req, res) {
             if (err) {
                 console.log(err);
             } else {
-                res.redirect("/home");
+                res.redirect("/home/" + currentEmail);
             }
         });
     }

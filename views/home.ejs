@@ -15,7 +15,7 @@
 
     <!-- Custom styles for this template -->
     <link href="/css/home.css" rel="stylesheet">
-    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 
 <body class="d-flex h-100 text-center text-white bg-dark">
@@ -31,18 +31,29 @@
                 </nav>
             </div>
         </header>
-        <div class="list"> 
+        <div class="list">
             <ul>
                 <% files.forEach(function(record){%>
+
                     <li>
-                        <a class="file" href="http://127.0.0.1:3000/DownloadFileWithRandomUrl/<%= record.token %> " download>
+                        <a class="file button" id="download<%= record.filename %>"
+                            href="http://127.0.0.1:3000/DownloadFileWithRandomUrl/<%= record.email %>/<%= record.token %> " download>
                             <%= record.fileName %>
                         </a>
-                        <a class="delete" href="http://127.0.0.1:3000/delete/<%= record.token %>">delete</a>
+                        <a class="delete button" id="delete<%= record.filename %>" href="http://127.0.0.1:3000/delete/<%= record.email %>/<%= record.token %>">delete</a>
                     </li>
                     <% }) %>
             </ul>
         </div>
+        <script>
+            let userToken = sessionStorage.getItem("userToken");
+            let buttons = document.getElementsByClassName("button")
+            for (button of buttons){
+                button.href  = button.href + "/" + userToken;
+                console.log(button.href);
+            }
+            
+        </script>
 </body>
 
 </html>

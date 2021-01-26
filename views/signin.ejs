@@ -16,33 +16,67 @@
 
     <!-- Custom styles for this template -->
     <link href="css/styles.css" rel="stylesheet">
-   
-   
+
+
 </head>
 
 <body class="text-center bg-dark text-white">
 
     <main class="form-signin">
-        <form action="/login" method="post">
-            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
-            <label for="inputEmail" class="visually-hidden">Email address</label>
-            <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required
-                autofocus>
-            <label for="inputPassword" class="visually-hidden">Password</label>
-            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password"
-                required>
-            <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" value="remember-me"> Remember me
-                </label>
-            </div>
-            <button class="btn btn-lg btn-primary" onclick="location.href='/signup'">Sign up</button>
-            <button class="btn btn-lg btn-primary" type="submit">Sign in</button>
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+        <label for="inputEmail" class="visually-hidden">Email address</label>
+        <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required
+            autofocus>
+        <label for="inputPassword" class="visually-hidden">Password</label>
+        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary" onclick="location.href='/signup'">Sign up</button>
+        <button class="btn btn-lg btn-primary" id="signinButton">Sign in</button>
+
+        <script>
+            document.getElementById("signinButton").addEventListener("click", sendRequest);
+
+            function sendRequest() {
+                const request = new XMLHttpRequest();
+                const url = "http://localhost:3000/login";
+                request.open("POST", url, true);
+                request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                let email = document.getElementById("inputEmail").value;
+                let password = document.getElementById("inputPassword").value;
+
+                request.send(`email=${email}&password=${password}`);
+                
+                request.onload = function () {
+                    //when username, password and userToken match
+                    if (this.status === 200) {
+                        console.log("response:" + this.responseText);
+                        let response = JSON.parse(this.responseText);
+                        //store username and userToken temporarily, so that they can be accessed from other ejs files
+                        sessionStorage.setItem("userToken", response.userToken);
+                        sessionStorage.setItem("email", response.email);
+                        window.location.href = "http://" + window.location.host + "/upload";
+                    }
+                    else if (this.responseText === "Wrong password"){
+                        alert("Wrong password");
+                    }
+                    else if (this.responseText === "email doesn't exsit!"){
+                        alert("email doesn't exsit!");
+                    }
+                }
 
              
-        </form>
-        
+
+            }
+
+        </script>
+
+
     </main>
 
 

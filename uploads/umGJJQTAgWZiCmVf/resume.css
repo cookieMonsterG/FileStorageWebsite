@@ -1,0 +1,102 @@
+/*
+    change the background color of the web page
+*/
+html {
+   
+}
+
+/*
+    modify the color and size of the background of main content
+
+*/
+body {
+    width: 70%;
+    margin: 0 auto;
+  
+    border: 5px solid black;
+    padding-left: 3%;
+    padding-top: 3%;
+}
+/*
+    put important message at the center of the line
+*/
+p{
+    text-align: center;
+}
+/*
+    change the color, padding, font, and position of my name
+*/
+#name {
+    margin: 0;
+    padding: 20px 0px;
+    color: black;
+    text-shadow: 3px 3px 10px black;
+    text-align: center;
+    font-size: 200%;
+    font-family: sans-serif;
+}
+
+/*
+    use an unique color and underline the 
+    headline of every section
+*/
+.subheading {
+    text-decoration: underline;
+    color:deepskyblue;
+    
+    
+}
+/*
+    bold all elements labeled as bold class
+*/
+.bold{
+    font-weight: bold;
+}
+/*
+    bold the text of name of each experience
+*/
+.activity{
+   font-weight: bold;
+}
+/*
+    bold the text of name of each competitiony
+*/
+.competition{
+    font-weight: bold;
+}
+/*
+    change to an approprate size of image
+*/
+img {
+    width: 10%;
+    height: auto;
+    margin: 0.5%;
+}
+/*
+    display my skill list as a table
+*/
+.list-column1{
+    bottom: 10px;
+    display: inline-block;
+}
+.list-column2{
+    display: inline-block;
+}
+.list-column3{
+    display: inline-block;
+}
+.list-column4{
+    display: inline-block;
+}
+/*
+    adjust the position of the skill tale
+*/
+.skill-table{
+    position: relative;
+    bottom: 20px;
+}
+.list-column4{
+    position: relative;
+    bottom: 40  px;
+}
+
